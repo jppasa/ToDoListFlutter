@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'config/di/locator.dart';
 import 'config/router/router.dart';
+import 'domain/cubits/todo_list_cubit.dart';
+import 'domain/repositories/api_repository.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeDependencies();
   runApp(const MyApp());
 }
 
@@ -11,9 +17,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: appRouter,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => ToDoListCubit(
+            locator<ApiRepository>(),
+          )..getToDoList(),
+        )
+      ],
+      child: MaterialApp.router(
+        //routerDelegate: appRouter.routerDelegate,
+        routerConfig: appRouter,
+      ),
     );
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
