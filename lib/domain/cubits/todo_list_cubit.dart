@@ -17,9 +17,10 @@ class ToDoListCubit extends BaseCubit<ToDoListState, List<ToDo>> {
       final response = await _apiRepository.getToDoList();
 
       if (response is DataSuccess) {
-        var data = ((response as DataSuccess).data as FetchToDoListResponse).todoList;
-        emit(ToDoListState.success(data));
-      } else if (response is DataFailed){
+        final successStatus = response as DataSuccess;
+        final toDoList = (successStatus.data as FetchToDoListResponse).todoList;
+        emit(ToDoListState.success(toDoList));
+      } else if (response is DataFailed) {
         var error = (response as DataFailed).error;
         emit(ToDoListState.error(error));
       }

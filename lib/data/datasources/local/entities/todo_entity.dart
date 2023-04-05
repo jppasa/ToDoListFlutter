@@ -1,27 +1,32 @@
-import 'dart:ffi';
+import 'package:floor/floor.dart';
 
-class ToDo {
+import '../../../../utils/constants.dart';
+
+@Entity(tableName: todosTable)
+class ToDoEntity {
+  @PrimaryKey(autoGenerate: true)
   final String id;
+
   final String title;
   final bool complete;
-  final Bool? synced;
-  final Bool? deleted;
+  final bool synced;
+  final bool deleted;
   final String created;
 
 //<editor-fold desc="Data Methods">
-  const ToDo({
+  const ToDoEntity({
     required this.id,
     required this.title,
     required this.complete,
-    this.synced,
-    this.deleted,
+    required this.synced,
+    required this.deleted,
     required this.created,
   });
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ToDo &&
+      (other is ToDoEntity &&
           runtimeType == other.runtimeType &&
           id == other.id &&
           title == other.title &&
@@ -41,18 +46,18 @@ class ToDo {
 
   @override
   String toString() {
-    return 'ToDo{ id: $id, title: $title, complete: $complete, synced: $synced, deleted: $deleted, created: $created,}';
+    return 'ToDoEntity{ id: $id, title: $title, complete: $complete, synced: $synced, deleted: $deleted, created: $created,}';
   }
 
-  ToDo copyWith({
+  ToDoEntity copyWith({
     String? id,
     String? title,
     bool? complete,
-    Bool? synced,
-    Bool? deleted,
+    bool? synced,
+    bool? deleted,
     String? created,
   }) {
-    return ToDo(
+    return ToDoEntity(
       id: id ?? this.id,
       title: title ?? this.title,
       complete: complete ?? this.complete,
@@ -77,18 +82,18 @@ class ToDo {
     };
   }
 
-  factory ToDo.fromMap(
+  factory ToDoEntity.fromMap(
     Map<String, dynamic> map, {
     String Function(String key)? keyMapper,
   }) {
     keyMapper ??= (key) => key;
 
-    return ToDo(
+    return ToDoEntity(
       id: map[keyMapper('id')] as String,
       title: map[keyMapper('title')] as String,
       complete: map[keyMapper('complete')] as bool,
-      synced: map[keyMapper('synced')] as Bool?,
-      deleted: map[keyMapper('deleted')] as Bool?,
+      synced: map[keyMapper('synced')] as bool,
+      deleted: map[keyMapper('deleted')] as bool,
       created: map[keyMapper('created')] as String,
     );
   }
