@@ -1,20 +1,32 @@
-import 'dart:ffi';
-
 class ToDo {
   final String id;
   final String title;
   final bool complete;
-  final Bool? synced;
-  final Bool? deleted;
-  final String created;
+  final bool? synced;
+  final bool? deleted;
+  final String? created;
+
+  static ToDo defaultInstance({required String title}) {
+    var createdTimestampSeconds = DateTime
+        .now()
+        .millisecondsSinceEpoch ~/ 1000;
+
+    return ToDo(
+        id: '0',
+        title: title,
+        complete: false,
+        synced: false,
+        deleted: false,
+        created: createdTimestampSeconds.toString());
+  }
 
 //<editor-fold desc="Data Methods">
   const ToDo({
     required this.id,
     required this.title,
     required this.complete,
-    this.synced,
-    this.deleted,
+    required this.synced,
+    required this.deleted,
     required this.created,
   });
 
@@ -41,15 +53,22 @@ class ToDo {
 
   @override
   String toString() {
-    return 'ToDo{ id: $id, title: $title, complete: $complete, synced: $synced, deleted: $deleted, created: $created,}';
+    return 'ToDo{' +
+        ' id: $id,' +
+        ' title: $title,' +
+        ' complete: $complete,' +
+        ' synced: $synced,' +
+        ' deleted: $deleted,' +
+        ' created: $created,' +
+        '}';
   }
 
   ToDo copyWith({
     String? id,
     String? title,
     bool? complete,
-    Bool? synced,
-    Bool? deleted,
+    bool? synced,
+    bool? deleted,
     String? created,
   }) {
     return ToDo(
@@ -68,12 +87,12 @@ class ToDo {
     keyMapper ??= (key) => key;
 
     return {
-      keyMapper('id'): id,
-      keyMapper('title'): title,
-      keyMapper('complete'): complete,
-      keyMapper('synced'): synced,
-      keyMapper('deleted'): deleted,
-      keyMapper('created'): created,
+      keyMapper('id'): this.id,
+      keyMapper('title'): this.title,
+      keyMapper('complete'): this.complete,
+      keyMapper('synced'): this.synced,
+      keyMapper('deleted'): this.deleted,
+      keyMapper('created'): this.created,
     };
   }
 
@@ -87,9 +106,9 @@ class ToDo {
       id: map[keyMapper('id')] as String,
       title: map[keyMapper('title')] as String,
       complete: map[keyMapper('complete')] as bool,
-      synced: map[keyMapper('synced')] as Bool?,
-      deleted: map[keyMapper('deleted')] as Bool?,
-      created: map[keyMapper('created')] as String,
+      synced: map[keyMapper('synced')] as bool?,
+      deleted: map[keyMapper('deleted')] as bool?,
+      created: map[keyMapper('created')] as String?,
     );
   }
 

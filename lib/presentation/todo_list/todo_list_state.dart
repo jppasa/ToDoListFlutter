@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import '../../domain/models/todo.dart';
 
 abstract class ToDoListState {
-  ToDoListState._();
+  const ToDoListState();
 
   factory ToDoListState.loading() = ToDoListLoadingState;
   factory ToDoListState.success(List<ToDo> list) = ToDoListSuccessState;
@@ -11,15 +11,15 @@ abstract class ToDoListState {
 }
 
 class ToDoListLoadingState extends ToDoListState {
-  ToDoListLoadingState(): super._();
+  const ToDoListLoadingState(): super();
 }
 
 class ToDoListSuccessState extends ToDoListState {
   final List<ToDo> list;
-  ToDoListSuccessState(this.list): super._();
+  const ToDoListSuccessState(this.list): super();
 }
 
 class ToDoListErrorState extends ToDoListState {
   final DioError error;
-  ToDoListErrorState(this.error): super._();
+  const ToDoListErrorState(this.error): super();
 }

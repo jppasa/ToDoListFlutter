@@ -5,13 +5,13 @@ import '../../../../utils/constants.dart';
 @Entity(tableName: todosTable)
 class ToDoEntity {
   @PrimaryKey(autoGenerate: true)
-  final String id;
+  final int? id;
 
   final String title;
   final bool complete;
   final bool synced;
   final bool deleted;
-  final String created;
+  final int created;
 
 //<editor-fold desc="Data Methods">
   const ToDoEntity({
@@ -46,16 +46,23 @@ class ToDoEntity {
 
   @override
   String toString() {
-    return 'ToDoEntity{ id: $id, title: $title, complete: $complete, synced: $synced, deleted: $deleted, created: $created,}';
+    return 'ToDoEntity{' +
+        ' id: $id,' +
+        ' title: $title,' +
+        ' complete: $complete,' +
+        ' synced: $synced,' +
+        ' deleted: $deleted,' +
+        ' created: $created,' +
+        '}';
   }
 
   ToDoEntity copyWith({
-    String? id,
+    int? id,
     String? title,
     bool? complete,
     bool? synced,
     bool? deleted,
-    String? created,
+    int? created,
   }) {
     return ToDoEntity(
       id: id ?? this.id,
@@ -73,12 +80,12 @@ class ToDoEntity {
     keyMapper ??= (key) => key;
 
     return {
-      keyMapper('id'): id,
-      keyMapper('title'): title,
-      keyMapper('complete'): complete,
-      keyMapper('synced'): synced,
-      keyMapper('deleted'): deleted,
-      keyMapper('created'): created,
+      keyMapper('id'): this.id,
+      keyMapper('title'): this.title,
+      keyMapper('complete'): this.complete,
+      keyMapper('synced'): this.synced,
+      keyMapper('deleted'): this.deleted,
+      keyMapper('created'): this.created,
     };
   }
 
@@ -89,12 +96,12 @@ class ToDoEntity {
     keyMapper ??= (key) => key;
 
     return ToDoEntity(
-      id: map[keyMapper('id')] as String,
+      id: map[keyMapper('id')] as int,
       title: map[keyMapper('title')] as String,
       complete: map[keyMapper('complete')] as bool,
       synced: map[keyMapper('synced')] as bool,
       deleted: map[keyMapper('deleted')] as bool,
-      created: map[keyMapper('created')] as String,
+      created: map[keyMapper('created')] as int,
     );
   }
 

@@ -449,13 +449,13 @@ packages:
     source: hosted
     version: "1.5.1"
   provider:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: provider
-      sha256: cdbe7530b12ecd9eb455bdaa2fcb8d4dad22e80b8afb4798b41479d5ce26847f
+      sha256: "109bee81b76e9f175d70572e8d8160b224d7fda6152062423a4134d50fcdfbaa"
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.5"
+    version: "6.0.0"
   pub_semver:
     dependency: transitive
     description:

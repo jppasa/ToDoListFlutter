@@ -83,7 +83,7 @@ class _$AppDb extends AppDb {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `todos` (`id` TEXT PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `complete` INTEGER NOT NULL, `synced` INTEGER NOT NULL, `deleted` INTEGER NOT NULL, `created` TEXT NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `todos` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `complete` INTEGER NOT NULL, `synced` INTEGER NOT NULL, `deleted` INTEGER NOT NULL, `created` INTEGER NOT NULL)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -101,7 +101,7 @@ class _$ToDoDao extends ToDoDao {
   _$ToDoDao(
     this.database,
     this.changeListener,
-  )   : _queryAdapter = QueryAdapter(database),
+  )   : _queryAdapter = QueryAdapter(database, changeListener),
         _toDoEntityInsertionAdapter = InsertionAdapter(
             database,
             'todos',
@@ -112,7 +112,21 @@ class _$ToDoDao extends ToDoDao {
                   'synced': item.synced ? 1 : 0,
                   'deleted': item.deleted ? 1 : 0,
                   'created': item.created
-                });
+                },
+            changeListener),
+        _toDoEntityUpdateAdapter = UpdateAdapter(
+            database,
+            'todos',
+            ['id'],
+            (ToDoEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'title': item.title,
+                  'complete': item.complete ? 1 : 0,
+                  'synced': item.synced ? 1 : 0,
+                  'deleted': item.deleted ? 1 : 0,
+                  'created': item.created
+                },
+            changeListener);
 
   final sqflite.DatabaseExecutor database;
 
@@ -122,21 +136,81 @@ class _$ToDoDao extends ToDoDao {
 
   final InsertionAdapter<ToDoEntity> _toDoEntityInsertionAdapter;
 
+  final UpdateAdapter<ToDoEntity> _toDoEntityUpdateAdapter;
+
   @override
   Future<List<ToDoEntity>> getAllToDos() async {
     return _queryAdapter.queryList('SELECT * FROM todos',
         mapper: (Map<String, Object?> row) => ToDoEntity(
-            id: row['id'] as String,
+            id: row['id'] as int?,
             title: row['title'] as String,
             complete: (row['complete'] as int) != 0,
             synced: (row['synced'] as int) != 0,
             deleted: (row['deleted'] as int) != 0,
-            created: row['created'] as String));
+            created: row['created'] as int));
+  }
+
+  @override
+  Stream<List<ToDoEntity>> getAllToDosAsStream() {
+    return _queryAdapter.queryListStream('SELECT * FROM todos',
+        mapper: (Map<String, Object?> row) => ToDoEntity(
+            id: row['id'] as int?,
+            title: row['title'] as String,
+            complete: (row['complete'] as int) != 0,
+            synced: (row['synced'] as int) != 0,
+            deleted: (row['deleted'] as int) != 0,
+            created: row['created'] as int),
+        queryableName: 'todos',
+        isView: false);
+  }
+
+  @override
+  Future<void> setAsDeleted(int id) async {
+    await _queryAdapter.queryNoReturn(
+        'UPDATE SET deleted = 1 FROM todos WHERE id = ?1',
+        arguments: [id]);
+  }
+
+  @override
+  Future<void> deleteAll() async {
+    await _queryAdapter.queryNoReturn('DELETE FROM todos');
+  }
+
+  @override
+  Future<void> setAsSyncedById(int id) async {
+    await _queryAdapter.queryNoReturn(
+        'UPDATE todos SET synced = 1 WHERE id = ?1',
+        arguments: [id]);
   }
 
   @override
   Future<int> insertToDo(ToDoEntity toDo) {
     return _toDoEntityInsertionAdapter.insertAndReturnId(
         toDo, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<List<int>> insert(List<ToDoEntity> toDos) {
+    return _toDoEntityInsertionAdapter.insertListAndReturnIds(
+        toDos, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> update(ToDoEntity toDo) async {
+    await _toDoEntityUpdateAdapter.update(toDo, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> updateAll(List<ToDoEntity> todos) async {
+    if (database is sqflite.Transaction) {
+      await super.updateAll(todos);
+    } else {
+      await (database as sqflite.Database)
+          .transaction<void>((transaction) async {
+        final transactionDatabase = _$AppDb(changeListener)
+          ..database = transaction;
+        await transactionDatabase.todosDao.updateAll(todos);
+      });
+    }
   }
 }

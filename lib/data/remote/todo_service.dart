@@ -3,6 +3,8 @@ import 'package:retrofit/retrofit.dart';
 
 import '../../../domain/models/responses/fetch_todo_list_response.dart';
 import '../../../utils/constants.dart';
+import '../../domain/models/responses/upload_todo_response.dart';
+import '../../domain/models/todo.dart';
 
 part 'todo_service.g.dart';
 
@@ -12,4 +14,7 @@ abstract class ToDoService {
   
   @GET('/api/v1/todo')
   Future<HttpResponse<FetchToDoListResponse>> getToDoList();
+
+  @POST('/api/v1/todo')
+  Future<HttpResponse<UploadToDoResponse>> uploadToDo(@Body() ToDo toDo);
 }
