@@ -432,6 +432,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  partition:
+    dependency: "direct main"
+    description:
+      name: partition
+      sha256: adbb8af9289a82a7763f9dea6fc59fc5c07425f24f7b8bfd035d6a9b347bb498
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   path:
     dependency: transitive
     description:

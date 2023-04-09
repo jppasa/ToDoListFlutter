@@ -38,6 +38,7 @@ dependencies:
   flutter_bloc: 8.1.2
   go_router: 6.5.3
   provider: 6.0.0
+  partition: 1.0.1
 
 dev_dependencies:
   flutter_test:

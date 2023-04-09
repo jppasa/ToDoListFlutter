@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:partition/partition.dart';
 import 'package:provider/provider.dart';
 
 import '../../domain/models/todo.dart';
@@ -29,11 +30,13 @@ class TodoListScreen extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: const Icon(Icons.add),
       ),
-      body: body(viewModel.state),
+      body: body(viewModel),
     );
   }
 
-  Widget body(ToDoListState state) {
+  Widget body(ToDoListViewModel viewModel) {
+    var state = viewModel.state;
+
     switch (state.runtimeType) {
       case ToDoListLoadingState:
         return const Center(child: CircularProgressIndicator());
@@ -44,22 +47,30 @@ class TodoListScreen extends StatelessWidget {
           ),
         );
       case ToDoListSuccessState:
-        return _buildToDoList((state as ToDoListSuccessState).list);
+        return _buildToDoList(viewModel, (state as ToDoListSuccessState).list);
       default:
         return const SizedBox();
     }
   }
 
-  Widget _buildToDoList(List<ToDo> todos) {
+  Widget _buildToDoList(ToDoListViewModel viewModel, List<ToDo> todos) {
     if (todos.isEmpty) {
       return const Center(
         child: Text("No ToDos yet"),
       );
     }
+
     return ListView.builder(
         itemCount: todos.length,
         itemBuilder: (context, index) {
-          return TodoListItem(todos[index]);
+          var todo = todos[index];
+          return TodoListItem(
+            todo,
+            onCheckChange: (value) =>
+                viewModel.toggleCompleted(todo, value ?? false),
+            onEdit: () {},
+            onDelete: () {},
+          );
         });
   }
 

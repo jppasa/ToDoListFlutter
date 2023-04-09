@@ -4,7 +4,17 @@ import '../../domain/models/todo.dart';
 
 class TodoListItem extends StatelessWidget {
   final ToDo todo;
-  const TodoListItem(this.todo, {Key? key}) : super(key: key);
+  final Function(bool?)? onCheckChange;
+  final Function()? onEdit;
+  final Function()? onDelete;
+
+  const TodoListItem(
+    this.todo, {
+    Key? key,
+    this.onCheckChange,
+    this.onEdit,
+    this.onDelete,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +27,8 @@ class TodoListItem extends StatelessWidget {
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
         ),
         leading: Checkbox(
-          value: false,
-          onChanged: (value) {
-            print(value);
-          },
+          value: todo.complete,
+          onChanged: onCheckChange,
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
@@ -28,16 +36,12 @@ class TodoListItem extends StatelessWidget {
             IconButton(
               iconSize: 24,
               icon: const Icon(Icons.edit),
-              onPressed: () {
-                print("hola");
-              },
+              onPressed: onEdit,
             ),
             IconButton(
               iconSize: 24,
               icon: const Icon(Icons.delete),
-              onPressed: () {
-                print("hola");
-              },
+              onPressed: onDelete,
             ),
           ],
         ),

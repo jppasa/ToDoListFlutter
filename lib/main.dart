@@ -6,6 +6,7 @@ import 'config/router/router.dart';
 import 'domain/feature/todo_list/add_todo_use_case.dart';
 import 'domain/feature/todo_list/get_todo_list_use_case.dart';
 import 'domain/feature/todo_list/sync_todos.dart';
+import 'domain/feature/todo_list/toggle_todo_completion_use_case.dart';
 import 'domain/repositories/api_repository.dart';
 import 'domain/repositories/db_repository.dart';
 import 'presentation/todo_list/todo_list_view_model.dart';
@@ -31,6 +32,10 @@ class MyApp extends StatelessWidget {
                 locator<DbRepository>(),
               ),
               AddToDoListUseCase(
+                locator<ApiRepository>(),
+                locator<DbRepository>(),
+              ),
+              ToggleTodoCompletionUseCase(
                 locator<ApiRepository>(),
                 locator<DbRepository>(),
               ),
