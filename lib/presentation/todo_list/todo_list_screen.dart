@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:partition/partition.dart';
 import 'package:provider/provider.dart';
 
 import '../../domain/models/todo.dart';
@@ -8,7 +7,7 @@ import 'todo_list_state.dart';
 import 'todo_list_view_model.dart';
 
 class TodoListScreen extends StatelessWidget {
-  TodoListScreen({Key? key}) : super(key: key);
+  const TodoListScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +19,9 @@ class TodoListScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _showAddToDoAlert(
+          _showCreateOrEditToDoAlert(
             context,
-            addTodo: (text) {
+            onActionPressed: (text) {
               viewModel.addTodo(text);
             },
           );
@@ -68,22 +67,31 @@ class TodoListScreen extends StatelessWidget {
             todo,
             onCheckChange: (value) =>
                 viewModel.toggleCompleted(todo, value ?? false),
-            onEdit: () {},
+            onEdit: () {
+              _showCreateOrEditToDoAlert(
+                context,
+                todo: todo,
+                onActionPressed: (newText) {
+                  viewModel.editTodoTitle(todo, newText);
+                },
+              );
+            },
             onDelete: () {},
           );
         });
   }
 
-  Future<void> _showAddToDoAlert(BuildContext context,
-      {required Function(String) addTodo}) {
-    var textEditingController = TextEditingController();
+  Future<void> _showCreateOrEditToDoAlert(BuildContext context,
+      {ToDo? todo, Function(String)? onActionPressed}) {
+    var isEdit = todo != null;
+    var textEditingController = TextEditingController(text: todo?.title);
+
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text('Add a ToDo'),
+            title: Text(isEdit ? 'Edit' : 'Add a ToDo'),
             content: TextField(
-              onChanged: (value) {},
               controller: textEditingController,
               decoration: const InputDecoration(
                   hintText: "What is there to accomplish?"),
@@ -91,14 +99,14 @@ class TodoListScreen extends StatelessWidget {
             actions: [
               MaterialButton(
                 onPressed: () {
-                  addTodo(textEditingController.text);
+                  onActionPressed?.call(textEditingController.text);
                   Navigator.pop(context);
                 },
                 color: Colors.blue,
                 textColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16)),
-                child: const Text('Add'),
+                child: Text(isEdit? 'Edit' : 'Add'),
               )
             ],
           );

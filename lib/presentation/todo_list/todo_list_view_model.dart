@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../../domain/feature/todo_list/add_todo_use_case.dart';
 import '../../domain/feature/todo_list/get_todo_list_use_case.dart';
 import '../../domain/feature/todo_list/sync_todos.dart';
-import '../../domain/feature/todo_list/toggle_todo_completion_use_case.dart';
+import '../../domain/feature/todo_list/update_todo_use_case.dart';
 import '../../domain/models/todo.dart';
 import 'todo_list_state.dart';
 
@@ -14,7 +14,7 @@ class ToDoListViewModel extends ChangeNotifier {
   final GetToDoListUseCase _getToDoListUseCase;
   final FetchTodosUseCase _fetchTodosUseCase;
   final AddToDoListUseCase _addTodoUseCase;
-  final ToggleTodoCompletionUseCase _todoCompletionUseCase;
+  final UpdateTodoUseCase _updateTodoUseCase;
 
   ToDoListState state = ToDoListState.loading();
 
@@ -22,7 +22,7 @@ class ToDoListViewModel extends ChangeNotifier {
     this._getToDoListUseCase,
     this._fetchTodosUseCase,
     this._addTodoUseCase,
-    this._todoCompletionUseCase,
+    this._updateTodoUseCase,
   ) {
     init();
   }
@@ -43,6 +43,13 @@ class ToDoListViewModel extends ChangeNotifier {
   }
 
   void toggleCompleted(ToDo todo, bool completed) {
-    _todoCompletionUseCase.toggleCompletion(todo, completed);
+    var newTodo = todo.copyWith(complete: completed);
+    _updateTodoUseCase.update(newTodo);
+    //_toggleCompletionUseCase.toggleCompletion(todo, completed);
+  }
+
+  void editTodoTitle(ToDo todo, String newText) {
+    var newTodo = todo.copyWith(title: newText);
+    _updateTodoUseCase.update(newTodo);
   }
 }
