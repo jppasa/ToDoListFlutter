@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:workmanager/workmanager.dart';
 
 import 'config/di/locator.dart';
 import 'config/router/router.dart';
@@ -11,9 +12,21 @@ import 'domain/repositories/api_repository.dart';
 import 'domain/repositories/db_repository.dart';
 import 'presentation/todo_list/todo_list_view_model.dart';
 
+@pragma('vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) {
+
+    return Future.value(true);
+  });
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDependencies();
+  Workmanager().initialize(
+      callbackDispatcher,
+      isInDebugMode: true 
+  );
   runApp(const MyApp());
 }
 

@@ -28,5 +28,13 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>UIBackgroundModes</key>
+    <array>
+    	<string>processing</string>
+    </array>
+    <key>BGTaskSchedulerPermittedIdentifiers</key>
+    <array>
+    	<string>task-identifier</string>
+    </array>
 </dict>
 </plist>
