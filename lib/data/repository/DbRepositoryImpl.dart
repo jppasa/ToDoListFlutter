@@ -33,7 +33,7 @@ class DbRepositoryImpl implements DbRepository {
   @override
   Stream<List<ToDo>> getToDosAsStream() {
     return _appDb.todosDao
-        .getAllToDosAsStream()
+        .getAllActiveAsStream()
         .map((event) => event.map((e) => e.asToDo()).toList());
   }
 

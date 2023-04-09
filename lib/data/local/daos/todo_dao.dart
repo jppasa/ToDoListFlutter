@@ -8,8 +8,8 @@ abstract class ToDoDao {
   @Query("SELECT * FROM $todosTable")
   Future<List<ToDoEntity>> getAllToDos();
 
-  @Query("SELECT * FROM $todosTable ORDER BY complete, created DESC")
-  Stream<List<ToDoEntity>> getAllToDosAsStream();
+  @Query("SELECT * FROM $todosTable WHERE deleted = 0 ORDER BY complete, created DESC")
+  Stream<List<ToDoEntity>> getAllActiveAsStream();
 
   @Insert(onConflict: OnConflictStrategy.replace)
   Future<int> insertToDo(ToDoEntity toDo);

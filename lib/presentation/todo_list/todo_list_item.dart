@@ -1,24 +1,26 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 import '../../domain/models/todo.dart';
 
 class TodoListItem extends StatelessWidget {
   final ToDo todo;
-  final Function(bool?)? onCheckChange;
+  final Function(bool? completed)? onComplete;
   final Function()? onEdit;
   final Function()? onDelete;
 
   const TodoListItem(
     this.todo, {
     Key? key,
-    this.onCheckChange,
+    this.onComplete,
     this.onEdit,
     this.onDelete,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return todo.complete? _completedTodo() : _pendingTodo();
+    return todo.complete ? _completedTodo() : _pendingTodo();
   }
 
   Widget _completedTodo() {
@@ -26,44 +28,38 @@ class TodoListItem extends StatelessWidget {
       color: Colors.white54,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      // decoration: BoxDecoration(
-      //   borderRadius: BorderRadius.circular(16),
-      //   border: Border.all(color: Colors.black12),
-      // ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
-        // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: ListTile(
           title: Text(
             todo.title,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
+            style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w400,
+                decoration: TextDecoration.lineThrough,
+                color: Colors.black54),
           ),
-          leading: todo.complete
-              ? const Icon(Icons.radio_button_checked)
-              : const Icon(Icons.radio_button_off),
+          leading: const Icon(Icons.check_circle),
         ),
       ),
     );
   }
 
-  Widget _pendingTodo(){
+  Widget _pendingTodo() {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      // decoration: BoxDecoration(
-      //   borderRadius: BorderRadius.circular(16),
-      //   border: Border.all(color: Colors.black12),
-      // ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
-        // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Dismissible(
           key: Key(todo.id),
           confirmDismiss: (direction) async {
-            if (direction == DismissDirection.startToEnd) {
-              onCheckChange?.call(true);
+            if (direction == DismissDirection.endToStart) {
+              onDelete?.call();
+            } else if (direction == DismissDirection.startToEnd) {
+              onComplete?.call(true);
             }
-            return false;
+            return true;
           },
           background: _completeBackground(),
           secondaryBackground: _deleteBackground(),
@@ -72,13 +68,12 @@ class TodoListItem extends StatelessWidget {
               todo.title,
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
             ),
-            leading: IconButton(
-              onPressed: () {
-                onCheckChange?.call(true);
+            leading: InkWell(
+              borderRadius: BorderRadius.circular(16),
+              onTap: () {
+                onComplete?.call(true);
               },
-              icon: todo.complete
-                  ? const Icon(Icons.radio_button_checked)
-                  : const Icon(Icons.radio_button_off),
+              child: const Icon(Icons.radio_button_off),
             ),
             trailing: IconButton(
               iconSize: 24,

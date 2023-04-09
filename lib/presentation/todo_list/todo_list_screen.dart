@@ -1,3 +1,5 @@
+import 'package:animated_list_plus/animated_list_plus.dart';
+import 'package:animated_list_plus/transitions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -46,10 +48,51 @@ class TodoListScreen extends StatelessWidget {
           ),
         );
       case ToDoListSuccessState:
-        return _buildToDoList(viewModel, (state as ToDoListSuccessState).list);
+        return _buildList(viewModel, (state as ToDoListSuccessState).list);
       default:
         return const SizedBox();
     }
+  }
+
+  Widget _buildList(ToDoListViewModel viewModel, List<ToDo> todos) {
+    if (todos.isEmpty) {
+      return const Center(
+        child: Text("No ToDos yet"),
+      );
+    }
+
+    return ImplicitlyAnimatedList<ToDo>(
+      items: todos,
+      areItemsTheSame: (a, b) => a.id == b.id,
+      itemBuilder: (context, animation, todo, index) {
+        return SizeFadeTransition(
+          sizeFraction: 0.7,
+          curve: Curves.easeInOut,
+          animation: animation,
+          child: TodoListItem(
+            todo,
+            onComplete: (bool? completed) =>
+                viewModel.setCompleted(todo, completed ?? false),
+            onEdit: () {
+              _showCreateOrEditToDoAlert(
+                context,
+                todo: todo,
+                onActionPressed: (newText) {
+                  viewModel.editTodoTitle(todo, newText);
+                },
+              );
+            },
+            onDelete: () => viewModel.delete(todo),
+          ),
+        );
+      },
+      // removeItemBuilder: (context, animation, oldItem) {
+      //   return FadeTransition(
+      //     opacity: animation,
+      //     child: Text(oldItem.name),
+      //   );
+      // },
+    );
   }
 
   Widget _buildToDoList(ToDoListViewModel viewModel, List<ToDo> todos) {
@@ -65,8 +108,8 @@ class TodoListScreen extends StatelessWidget {
           var todo = todos[index];
           return TodoListItem(
             todo,
-            onCheckChange: (value) =>
-                viewModel.toggleCompleted(todo, value ?? false),
+            onComplete: (bool? completed) =>
+                viewModel.setCompleted(todo, completed ?? false),
             onEdit: () {
               _showCreateOrEditToDoAlert(
                 context,
@@ -76,7 +119,7 @@ class TodoListScreen extends StatelessWidget {
                 },
               );
             },
-            onDelete: () {},
+            onDelete: () => viewModel.delete(todo),
           );
         });
   }
@@ -106,7 +149,7 @@ class TodoListScreen extends StatelessWidget {
                 textColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16)),
-                child: Text(isEdit? 'Edit' : 'Add'),
+                child: Text(isEdit ? 'Edit' : 'Add'),
               )
             ],
           );

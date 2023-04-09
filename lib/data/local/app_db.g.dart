@@ -151,9 +151,9 @@ class _$ToDoDao extends ToDoDao {
   }
 
   @override
-  Stream<List<ToDoEntity>> getAllToDosAsStream() {
+  Stream<List<ToDoEntity>> getAllActiveAsStream() {
     return _queryAdapter.queryListStream(
-        'SELECT * FROM todos ORDER BY complete, created DESC',
+        'SELECT * FROM todos WHERE deleted = 0 ORDER BY complete, created DESC',
         mapper: (Map<String, Object?> row) => ToDoEntity(
             id: row['id'] as int?,
             title: row['title'] as String,

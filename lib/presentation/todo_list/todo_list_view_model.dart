@@ -42,14 +42,18 @@ class ToDoListViewModel extends ChangeNotifier {
     // This could mean changing Provider/ChangeNotifier to all Block/Cubits pattern
   }
 
-  void toggleCompleted(ToDo todo, bool completed) {
+  void setCompleted(ToDo todo, bool completed) {
     var newTodo = todo.copyWith(complete: completed);
     _updateTodoUseCase.update(newTodo);
-    //_toggleCompletionUseCase.toggleCompletion(todo, completed);
   }
 
   void editTodoTitle(ToDo todo, String newText) {
     var newTodo = todo.copyWith(title: newText);
+    _updateTodoUseCase.update(newTodo);
+  }
+
+  void delete(ToDo todo) {
+    var newTodo = todo.copyWith(deleted: true);
     _updateTodoUseCase.update(newTodo);
   }
 }
