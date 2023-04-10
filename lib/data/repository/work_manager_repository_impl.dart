@@ -73,11 +73,11 @@ class WorkManagerRepositoryImpl implements WorkManagerRepository {
   // TODO work manager is canceling process before request is able to respond
   @override
   void scheduleToDoDeletion(String todoId) {
-    var tag = "$DELETE_TODO_FROM_REMOTE-$todoId";
+    var tag = "$deleteTodoFromRemote-$todoId";
     //_workmanager.cancelByTag(tag);
     _workmanager.registerOneOffTask(
-      TODOS_TASK_IDENTIFIER,
-      DELETE_TODO_FROM_REMOTE,
+      todosTaskIdentifier,
+      deleteTodoFromRemote,
       tag: tag,
       constraints: Constraints(networkType: NetworkType.connected),
       inputData: {todoIdKey: todoId},
@@ -88,22 +88,22 @@ class WorkManagerRepositoryImpl implements WorkManagerRepository {
 
   @override
   void scheduleToDosDownload() {
-    _workmanager.cancelByTag(DOWNLOAD_TODOS);
+    _workmanager.cancelByTag(downloadTodos);
     _workmanager.registerOneOffTask(
-      TODOS_TASK_IDENTIFIER,
-      DOWNLOAD_TODOS,
-      tag: DOWNLOAD_TODOS,
+      todosTaskIdentifier,
+      downloadTodos,
+      tag: downloadTodos,
       constraints: Constraints(networkType: NetworkType.connected),
     );
   }
 
   @override
   void scheduleToDoUpload(String todoId) {
-    var tag = "$UPLOAD_TODO_UPDATE-$todoId";
+    var tag = "$uploadTodoUpdate-$todoId";
     _workmanager.cancelByTag(tag);
     _workmanager.registerOneOffTask(
-      TODOS_TASK_IDENTIFIER,
-      UPLOAD_TODO_UPDATE,
+      todosTaskIdentifier,
+      uploadTodoUpdate,
       tag: tag,
       constraints: Constraints(networkType: NetworkType.connected),
       inputData: {todoIdKey: todoId},

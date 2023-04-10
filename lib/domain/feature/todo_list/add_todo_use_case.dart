@@ -1,5 +1,4 @@
 import '../../../data/data_state.dart';
-import '../../models/responses/upload_todo_response.dart';
 import '../../models/todo.dart';
 import '../../repositories/api_repository.dart';
 import '../../repositories/db_repository.dart';
@@ -14,7 +13,6 @@ class AddToDoListUseCase {
   Future<ResultState> addTodoFromTextAndSync(String todoText) async {
     var newTodo = ToDo.defaultInstance(title: todoText.trim());
     var storedTodoId = await _dbRepository.storeToDo(newTodo);
-    print(storedTodoId);
     var storedTodo = newTodo.copyWith(id: storedTodoId.toString());
 
     // TODO sync using work manager

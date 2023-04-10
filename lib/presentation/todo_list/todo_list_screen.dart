@@ -173,12 +173,12 @@ class TodoListScreen extends StatelessWidget {
 }
 
 class ToDoList extends StatefulWidget {
-  List<ToDo> todos;
-  Function(ToDo todo, bool completed) setCompleted;
-  Function(ToDo todo) editRequested;
-  Function(ToDo todo) deleteToDo;
+  final List<ToDo> todos;
+  final Function(ToDo todo, bool completed) setCompleted;
+  final Function(ToDo todo) editRequested;
+  final Function(ToDo todo) deleteToDo;
 
-  ToDoList(
+  const ToDoList(
     this.todos, {
     Key? key,
     required this.setCompleted,
@@ -213,14 +213,6 @@ class _ToDoListState extends State<ToDoList> {
             todo,
             onComplete: (bool? completed) => widget.setCompleted(todo, completed ?? false),
             onEdit: () => widget.editRequested(todo),
-            //   _showCreateOrEditToDoAlert(
-            //     context,
-            //     todo: todo,
-            //     onActionPressed: (newText) {
-            //       widget.editRequested(todo, newText);
-            //     },
-            //   );
-            // },
             onDelete: () {
               setState(() {
                 widget.todos.remove(todo);

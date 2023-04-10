@@ -22,15 +22,15 @@ void callbackDispatcher() {
     var workManagerRepository = locator<WorkManagerRepository>();
 
     switch (task) {
-      case UPLOAD_TODO_UPDATE:
+      case uploadTodoUpdate:
         if (inputData != null) {
           workManagerRepository.executeUpload(inputData);
         }
         break;
-      case DOWNLOAD_TODOS:
+      case downloadTodos:
         workManagerRepository.executeDownload();
         break;
-      case DELETE_TODO_FROM_REMOTE:
+      case deleteTodoFromRemote:
         if (inputData != null) {
           workManagerRepository.executeDeletion(inputData);
         }
@@ -68,7 +68,6 @@ class MyApp extends StatelessWidget {
         UpdateTodoUseCase(
           locator<ApiRepository>(),
           locator<DbRepository>(),
-          locator<WorkManagerRepository>(),
         ),
       ),
       child: Consumer<ToDoListViewModel>(

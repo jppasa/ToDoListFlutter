@@ -2,15 +2,14 @@ import '../../../data/data_state.dart';
 import '../../models/todo.dart';
 import '../../repositories/api_repository.dart';
 import '../../repositories/db_repository.dart';
-import '../../repositories/work_manager_repository.dart';
 import 'result_state.dart';
 
 class UpdateTodoUseCase {
   final ApiRepository _apiRepository;
   final DbRepository _dbRepository;
-  final WorkManagerRepository _workManagerRepository;
+  // final WorkManagerRepository _workManagerRepository;
 
-  UpdateTodoUseCase(this._apiRepository, this._dbRepository, this._workManagerRepository);
+  UpdateTodoUseCase(this._apiRepository, this._dbRepository);
 
   Future<ResultState> update(ToDo todo) async {
     await _dbRepository.updateToDo(todo.copyWith(synced: false));
