@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../domain/feature/todo_list/add_todo_use_case.dart';
 import '../../domain/feature/todo_list/get_todo_list_use_case.dart';
-import '../../domain/feature/todo_list/sync_todos.dart';
+import '../../domain/feature/todo_list/fetch_todos_use_case.dart';
 import '../../domain/feature/todo_list/update_todo_use_case.dart';
 import '../../domain/models/todo.dart';
 import 'todo_list_state.dart';

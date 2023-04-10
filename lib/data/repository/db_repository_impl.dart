@@ -9,10 +9,8 @@ class DbRepositoryImpl implements DbRepository {
   DbRepositoryImpl(this._appDb);
 
   @override
-  Future<List<ToDo>> getToDos() {
-    return _appDb.todosDao
-        .getAllToDos()
-        .then((value) => value.map((entity) => entity.asToDo()).toList());
+  Future<ToDo?> getToDoById(int id) {
+    return _appDb.todosDao.getById(id).then((value) => value?.asToDo());
   }
 
   @override
@@ -45,5 +43,10 @@ class DbRepositoryImpl implements DbRepository {
   @override
   Future<void> setToDoAsSyncedById(int id) {
     return _appDb.todosDao.setAsSyncedById(id);
+  }
+
+  @override
+  Future<void> delete(ToDo todo) {
+    return _appDb.todosDao.deleteToDo(todo.asToDoEntity());
   }
 }

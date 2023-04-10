@@ -126,6 +126,19 @@ class _$ToDoDao extends ToDoDao {
                   'deleted': item.deleted ? 1 : 0,
                   'created': item.created
                 },
+            changeListener),
+        _toDoEntityDeletionAdapter = DeletionAdapter(
+            database,
+            'todos',
+            ['id'],
+            (ToDoEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'title': item.title,
+                  'complete': item.complete ? 1 : 0,
+                  'synced': item.synced ? 1 : 0,
+                  'deleted': item.deleted ? 1 : 0,
+                  'created': item.created
+                },
             changeListener);
 
   final sqflite.DatabaseExecutor database;
@@ -138,16 +151,19 @@ class _$ToDoDao extends ToDoDao {
 
   final UpdateAdapter<ToDoEntity> _toDoEntityUpdateAdapter;
 
+  final DeletionAdapter<ToDoEntity> _toDoEntityDeletionAdapter;
+
   @override
-  Future<List<ToDoEntity>> getAllToDos() async {
-    return _queryAdapter.queryList('SELECT * FROM todos',
+  Future<ToDoEntity?> getById(int id) async {
+    return _queryAdapter.query('SELECT * FROM todos WHERE id = ?1',
         mapper: (Map<String, Object?> row) => ToDoEntity(
             id: row['id'] as int?,
             title: row['title'] as String,
             complete: (row['complete'] as int) != 0,
             synced: (row['synced'] as int) != 0,
             deleted: (row['deleted'] as int) != 0,
-            created: row['created'] as int));
+            created: row['created'] as int),
+        arguments: [id]);
   }
 
   @override
@@ -168,7 +184,7 @@ class _$ToDoDao extends ToDoDao {
   @override
   Future<void> setAsDeleted(int id) async {
     await _queryAdapter.queryNoReturn(
-        'UPDATE SET deleted = 1 FROM todos WHERE id = ?1',
+        'UPDATE todos SET deleted = 1 WHERE id = ?1',
         arguments: [id]);
   }
 
@@ -199,6 +215,11 @@ class _$ToDoDao extends ToDoDao {
   @override
   Future<void> update(ToDoEntity toDo) async {
     await _toDoEntityUpdateAdapter.update(toDo, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> deleteToDo(ToDoEntity todo) async {
+    await _toDoEntityDeletionAdapter.delete(todo);
   }
 
   @override

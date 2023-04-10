@@ -52,15 +52,22 @@ class TodoListItem extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
         child: Dismissible(
-          key: Key(todo.id),
+          key: UniqueKey(),
           confirmDismiss: (direction) async {
             if (direction == DismissDirection.endToStart) {
               onDelete?.call();
             } else if (direction == DismissDirection.startToEnd) {
               onComplete?.call(true);
             }
-            return true;
+            return false;
           },
+          // onDismissed: (DismissDirection direction) {
+          //   if (direction == DismissDirection.endToStart) {
+          //     onDelete?.call();
+          //   } else if (direction == DismissDirection.startToEnd) {
+          //     onComplete?.call(true);
+          //   }
+          // },
           background: _completeBackground(),
           secondaryBackground: _deleteBackground(),
           child: ListTile(

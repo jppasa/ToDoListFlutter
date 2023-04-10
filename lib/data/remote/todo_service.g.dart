@@ -50,7 +50,7 @@ class _ToDoService implements ToDoService {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(toDo?.toMap() ?? <String, dynamic>{});
+    _data.addAll(toDo.toMap());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<UploadToDoResponse>>(Options(
       method: 'POST',
@@ -65,6 +65,30 @@ class _ToDoService implements ToDoService {
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = UploadToDoResponse.fromMap(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<DeleteToDoResponse>> deleteToDoById(todoId) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<DeleteToDoResponse>>(Options(
+      method: 'DELETE',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/api/v1/todo?id=${todoId}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = DeleteToDoResponse.fromMap(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }

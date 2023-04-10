@@ -8,6 +8,7 @@ class GetToDoListUseCase {
   GetToDoListUseCase(this._dbRepository);
 
   Stream<List<ToDo>> getToDoListLocally() {
+
     return _dbRepository.getToDosAsStream();
   }
 }

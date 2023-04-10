@@ -5,8 +5,8 @@ import '../entities/todo_entity.dart';
 
 @dao
 abstract class ToDoDao {
-  @Query("SELECT * FROM $todosTable")
-  Future<List<ToDoEntity>> getAllToDos();
+  @Query("SELECT * FROM $todosTable WHERE id = :id")
+  Future<ToDoEntity?> getById(int id);
 
   @Query("SELECT * FROM $todosTable WHERE deleted = 0 ORDER BY complete, created DESC")
   Stream<List<ToDoEntity>> getAllActiveAsStream();
@@ -17,7 +17,7 @@ abstract class ToDoDao {
   @Insert(onConflict: OnConflictStrategy.replace)
   Future<List<int>> insert(List<ToDoEntity> toDos);
 
-  @Query("UPDATE SET deleted = 1 FROM $todosTable WHERE id = :id")
+  @Query("UPDATE $todosTable SET deleted = 1 WHERE id = :id")
   Future<void> setAsDeleted(int id);
 
   @Update(onConflict: OnConflictStrategy.replace)
@@ -34,4 +34,7 @@ abstract class ToDoDao {
 
   @Query('UPDATE $todosTable SET synced = 1 WHERE id = :id')
   Future<void> setAsSyncedById(int id);
+
+  @delete
+  Future<void> deleteToDo(ToDoEntity todo);
 }
