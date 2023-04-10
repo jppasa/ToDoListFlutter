@@ -15,7 +15,6 @@ class AddToDoListUseCase {
     var storedTodoId = await _dbRepository.storeToDo(newTodo);
     var storedTodo = newTodo.copyWith(id: storedTodoId.toString());
 
-    // TODO sync using work manager
     var result = await _apiRepository.uploadTodo(storedTodo);
 
     if (result is DataFailed) {
