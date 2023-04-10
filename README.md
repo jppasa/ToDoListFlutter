@@ -1,16 +1,9 @@
-# todo_list
+# ToDo List
 
 A simple todo-list app
 
-## Getting Started
+## Screenshots
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+|||||
+|-|-|-|-|
+|![image](https://user-images.githubusercontent.com/1534976/230833973-171889dd-61b7-4bf4-a1a5-75397d448c9f.png)|![image](https://user-images.githubusercontent.com/1534976/230834015-c04355a8-cde2-47f9-ab6d-b2f5e78ae0f0.png)|![image](https://user-images.githubusercontent.com/1534976/230834040-4fb80191-a7be-4171-a978-5f06a234a45a.png)|![image](https://user-images.githubusercontent.com/1534976/230834069-ee12033c-3f29-49d4-96c5-3734b207aa03.png)|
